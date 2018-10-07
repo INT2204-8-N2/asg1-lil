@@ -6,13 +6,16 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class Dictionary {
     
     protected HashMap<String, String> data;
     protected ArrayList<String> keys;
+    
+    public Dictionary() {
+        data = new HashMap<>();
+        keys = new ArrayList<>();
+    }
     
     public HashMap<String, String> getData() {
         return data;
@@ -29,9 +32,7 @@ public class Dictionary {
     
     private void readData() {
         String path = "data/E_V.txt";
-        try {
-            BufferedReader in = new BufferedReader(new FileReader(path));
-            
+        try (BufferedReader in = new BufferedReader(new FileReader(path))) {
             String line, word, def;
             int wordsNum = 0;
             while ((line = in.readLine()) != null) {
