@@ -11,12 +11,17 @@ public class Dictionary {
     
     protected HashMap<String, String> data;
     protected ArrayList<String> keys;
-    private String path = "data/E_V.txt";
     
     public Dictionary() {
         data = new HashMap<>();
         keys = new ArrayList<>();
-        readData();
+        readData("data/E_V.txt");
+    }
+    
+    public Dictionary(String path) {
+        data = new HashMap<>();
+        keys = new ArrayList<>();
+        readData(path);
     }
 
     public HashMap<String, String> getData() {
@@ -32,7 +37,7 @@ public class Dictionary {
         this.keys = keys;
     }
     
-    private void readData() {
+    private void readData(String path) {
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
             String line, word, def;
             while ((line = in.readLine()) != null) {
