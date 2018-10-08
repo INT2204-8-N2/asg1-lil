@@ -11,12 +11,14 @@ public class Dictionary {
     
     protected HashMap<String, String> data;
     protected ArrayList<String> keys;
+    private String path = "data/E_V.txt";
     
     public Dictionary() {
         data = new HashMap<>();
         keys = new ArrayList<>();
+        readData();
     }
-    
+
     public HashMap<String, String> getData() {
         return data;
     }
@@ -31,7 +33,6 @@ public class Dictionary {
     }
     
     private void readData() {
-        String path = "data/E_V.txt";
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
             String line, word, def;
             int wordsNum = 0;
@@ -62,9 +63,8 @@ public class Dictionary {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-    }
-    
-    public void addWord(String word,String def){
+    }  
+    public void addWord(String word, String def){
         word = word.toLowerCase();
         data.put(word, def);
         int n = binarySearch(keys, word);
@@ -103,4 +103,5 @@ public class Dictionary {
             data.remove(word);
         }
     }
+    public void update() {};
 }
