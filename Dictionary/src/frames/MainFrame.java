@@ -35,12 +35,8 @@ public class MainFrame extends javax.swing.JFrame {
                 searchBarActionPerformed(evt);
             }
         });
-        searchBar.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                searchBarKeyPressed(evt);
-            }
-        });
 
+        resultArea.setEditable(false);
         jScrollPane1.setViewportView(resultArea);
         resultArea.setContentType("text/html");
 
@@ -51,6 +47,11 @@ public class MainFrame extends javax.swing.JFrame {
         });
         listDictionary.setToolTipText("");
         listDictionary.setName(""); // NOI18N
+        listDictionary.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                listDictionaryMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(listDictionary);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -84,16 +85,21 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void listDictionaryMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_listDictionaryMouseClicked
+        String selectedWord = (String) listDictionary.getSelectedValue();
+        searchBar.setText(selectedWord);
+        displayWordDefinition(selectedWord);      
+    }//GEN-LAST:event_listDictionaryMouseClicked
+
     private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBarActionPerformed
-        String word = searchBar.getText();
-        String meaning = hm.get(word);
-        resultArea.setText(meaning);
+        String word = searchBar.getText().trim().toLowerCase();
+        displayWordDefinition(word);
     }//GEN-LAST:event_searchBarActionPerformed
-
-    private void searchBarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_searchBarKeyPressed
-         
-    }//GEN-LAST:event_searchBarKeyPressed
-
+    
+    private void displayWordDefinition(String key) {
+        String meaning = hm.get(key);
+        resultArea.setText(meaning);
+    }
     
     private Dictionary currentDic = null;
     private ArrayList<String> keys = null;
