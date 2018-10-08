@@ -35,7 +35,6 @@ public class Dictionary {
     private void readData() {
         try (BufferedReader in = new BufferedReader(new FileReader(path))) {
             String line, word, def;
-            int wordsNum = 0;
             while ((line = in.readLine()) != null) {
                 
                 int index1 = line.indexOf("<html>");
@@ -53,8 +52,6 @@ public class Dictionary {
 
                     def = line.substring(index1);
                     data.put(word, def);
-
-                    wordsNum++;
                 }
             }
             in.close();
