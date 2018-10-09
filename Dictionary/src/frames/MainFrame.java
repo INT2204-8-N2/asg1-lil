@@ -151,7 +151,9 @@ public class MainFrame extends javax.swing.JFrame {
     
     private void loadListener() {
         searchBar.addKeyListener(new SearchBarListener());
-        keysList.addMouseListener(new ListKeysListener());
+        ListKeysListener listener = new ListKeysListener();
+        keysList.addMouseListener(listener);
+        keysList.addKeyListener(listener);
     }
     
     private void reload() {
@@ -171,6 +173,9 @@ public class MainFrame extends javax.swing.JFrame {
                 displayWordDefinition(word);
                 keysList.setSelectedIndex(0);
             }  
+            else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                keysList.setSelectedIndex(0);
+            }
         }
 
         @Override
@@ -188,7 +193,7 @@ public class MainFrame extends javax.swing.JFrame {
 
     }
     
-    private class ListKeysListener implements MouseListener {
+    private class ListKeysListener implements MouseListener, KeyListener {
 
         @Override
         public void mouseClicked(MouseEvent e) {
@@ -215,6 +220,23 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         public void mouseExited(MouseEvent e) {
             
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            
+        }
+
+        @Override
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                displayWordDefinition(searchBar.getText());
+            }
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            searchBar.setText(keysList.getSelectedValue().toString());
         }
         
     }
