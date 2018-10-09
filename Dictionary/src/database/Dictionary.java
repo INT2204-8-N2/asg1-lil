@@ -27,12 +27,15 @@ public class Dictionary {
     public HashMap<String, String> getData() {
         return data;
     }
+    
     public void setData(HashMap<String, String> data) {
         this.data = data;
     }
+    
     public ArrayList<String> getKeys() {
         return keys;
     }
+    
     public void setKeys(ArrayList<String> keys) {
         this.keys = keys;
     }
@@ -66,12 +69,14 @@ public class Dictionary {
             ex.printStackTrace();
         }
     }  
+    
     public void addWord(String word, String def){
         word = word.toLowerCase();
         data.put(word, def);
         int n = binarySearch(keys, word);
         keys.add(n, word);
-    }      
+    }    
+    
     public int binarySearch(ArrayList<String> keys, String str) { 
         int l = 0, r = keys.size() - 1; 
         while (l <= r) { 
@@ -84,7 +89,8 @@ public class Dictionary {
                 r = m - 1; 
         }
         return -1;
-    }     
+    }  
+    
     public void modifyWord(String word, String newWord, String newDef) {
         if (newWord == null){
             data.replace(word, newDef);
@@ -98,6 +104,7 @@ public class Dictionary {
             addWord(newWord,newDef);
         }
     }
+    
     public void removeWord(String word) {
         int n = keys.lastIndexOf(word);
         if (n>=0 && n<=keys.size()-1){
@@ -105,5 +112,6 @@ public class Dictionary {
             data.remove(word);
         }
     }
+    
     public void update() {};
 }

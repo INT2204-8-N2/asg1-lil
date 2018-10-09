@@ -1,8 +1,10 @@
 package frames;
 
 import database.Dictionary;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -20,7 +22,7 @@ public class MainFrame extends javax.swing.JFrame {
 
         searchBar = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        resultArea = new javax.swing.JTextPane();
+        definition = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         keysList = new javax.swing.JList();
         changeEToV = new javax.swing.JButton();
@@ -28,16 +30,10 @@ public class MainFrame extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        searchBar.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                searchBarActionPerformed(evt);
-            }
-        });
-
-        resultArea.setEditable(false);
-        resultArea.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPane1.setViewportView(resultArea);
-        resultArea.setContentType("text/html");
+        definition.setEditable(false);
+        definition.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        jScrollPane1.setViewportView(definition);
+        definition.setContentType("text/html");
 
         keysList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = {};
@@ -46,11 +42,6 @@ public class MainFrame extends javax.swing.JFrame {
         });
         keysList.setToolTipText("");
         keysList.setName(""); // NOI18N
-        keysList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                keysListMouseClicked(evt);
-            }
-        });
         jScrollPane2.setViewportView(keysList);
 
         changeEToV.setText("E_V");
@@ -59,21 +50,11 @@ public class MainFrame extends javax.swing.JFrame {
                 changeEToVMouseClicked(evt);
             }
         });
-        changeEToV.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeEToVActionPerformed(evt);
-            }
-        });
 
         changeVToE.setText("V_E");
         changeVToE.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 changeVToEMouseClicked(evt);
-            }
-        });
-        changeVToE.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                changeVToEActionPerformed(evt);
             }
         });
 
@@ -101,8 +82,8 @@ public class MainFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(changeEToV)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(changeEToV, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(changeVToE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,26 +100,6 @@ public class MainFrame extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void keysListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_keysListMouseClicked
-        String selectedWord = (String) keysList.getSelectedValue();
-        searchBar.setText(selectedWord);
-        displayWordDefinition(selectedWord);      
-    }//GEN-LAST:event_keysListMouseClicked
-
-    private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBarActionPerformed
-        String word = searchBar.getText().trim();
-        if (currentDic.binarySearch(keys, word) != -1) {
-            displayWordDefinition(word);
-        }
-        else { 
-            resultArea.setText("Not found");
-        }
-        
-        int index1 = keys.indexOf(word);
-        int index2 = keys.lastIndexOf(word);
-        System.out.println(index1);
-    }//GEN-LAST:event_searchBarActionPerformed
-
     private void changeEToVMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeEToVMouseClicked
         currentDic = null;
         currentDic = eToV;
@@ -150,45 +111,96 @@ public class MainFrame extends javax.swing.JFrame {
         currentDic = vToE;
         reload();
     }//GEN-LAST:event_changeVToEMouseClicked
-
-    private void changeEToVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeEToVActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_changeEToVActionPerformed
-
-    private void changeVToEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeVToEActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_changeVToEActionPerformed
     
     private void displayKeys() {
         keysList.setListData(currentDic.getKeys().toArray());
     }
     
     private void displayWordDefinition(String key) {
-        String meaning = hm.get(key);
-        resultArea.setText(meaning);
+        String meaning = currentDic.getData().get(key);
+        definition.setText(meaning);
+    }
+    
+    private void loadListener() {
+        searchBar.addKeyListener(new SearchBarListener());
+        keysList.addMouseListener(new ListKeysListener());
     }
     
     private void reload() {
         searchBar.setText("");
-        resultArea.setText("");
+        definition.setText("");
         searchBar.setRequestFocusEnabled(true);
-        hm = currentDic.getData();
-        keys = currentDic.getKeys();
-        //displayKeys();
+        loadListener();
+        displayKeys();
+    }
+    
+    private class SearchBarListener implements KeyListener {
+        
+        @Override
+        public void keyPressed(KeyEvent e) {    
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                String word = searchBar.getText();
+                displayWordDefinition(word);
+            }  
+        }
+
+        @Override
+        public void keyTyped(KeyEvent e) {
+            
+        }
+
+        @Override
+        public void keyReleased(KeyEvent e) {
+            if (e.getKeyCode() != KeyEvent.VK_ENTER) {
+                String word = searchBar.getText();
+                String[] temp = {word, ""};
+                keysList.setListData(temp);
+            }
+        }
+
+    }
+    
+    private class ListKeysListener implements MouseListener {
+
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            
+        }
+
+        @Override
+        public void mousePressed(MouseEvent e) {
+            String selectedWord = (String) keysList.getSelectedValue();
+            searchBar.setText(selectedWord);
+            displayWordDefinition(selectedWord);
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+            
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+           
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+            
+        }
+        
     }
     
     private Dictionary currentDic = null;
     private Dictionary eToV = null;
     private Dictionary vToE = null;
-    private ArrayList<String> keys = null;
-    private HashMap<String, String> hm = null;
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton changeEToV;
     private javax.swing.JButton changeVToE;
+    private javax.swing.JTextPane definition;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList keysList;
-    private javax.swing.JTextPane resultArea;
     private javax.swing.JTextField searchBar;
     // End of variables declaration//GEN-END:variables
 }
