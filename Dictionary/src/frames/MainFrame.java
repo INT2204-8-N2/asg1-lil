@@ -1,19 +1,19 @@
 package frames;
 
+import com.sun.glass.events.KeyEvent;
 import database.Dictionary;
+import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class MainFrame extends javax.swing.JFrame {
 
-    /**
-     * Creates new form MainFrame
-     */
     public MainFrame() {
         initComponents();
         currentDic = new Dictionary();
         eToV = new Dictionary("data/E_V.txt");
         vToE = new Dictionary("data/V_E.txt");
+        searchBar.addKeyListener(new CustomKeyListener());
         reload();
     }
 
@@ -38,6 +38,7 @@ public class MainFrame extends javax.swing.JFrame {
         });
 
         resultArea.setEditable(false);
+        resultArea.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(resultArea);
         resultArea.setContentType("text/html");
 
@@ -61,11 +62,21 @@ public class MainFrame extends javax.swing.JFrame {
                 changeEToVMouseClicked(evt);
             }
         });
+        changeEToV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeEToVActionPerformed(evt);
+            }
+        });
 
         changeVToE.setText("V_E");
         changeVToE.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 changeVToEMouseClicked(evt);
+            }
+        });
+        changeVToE.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                changeVToEActionPerformed(evt);
             }
         });
 
@@ -76,34 +87,36 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(searchBar, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 43, Short.MAX_VALUE)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addGap(127, 127, 127)
-                .addComponent(changeEToV)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(changeEToV, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(searchBar, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
                 .addGap(18, 18, 18)
-                .addComponent(changeVToE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(changeVToE, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(changeEToV)
                     .addComponent(changeVToE))
-                .addGap(14, 14, 14)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 209, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(54, 54, 54))))
+                        .addComponent(jScrollPane2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
 
         pack();
@@ -117,7 +130,12 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBarActionPerformed
         String word = searchBar.getText().trim();
-        displayWordDefinition(word);
+        if (currentDic.binarySearch(keys, word) != 0) {
+            displayWordDefinition(word);
+        }
+        else { 
+            displayWordDefinition("Nout found");
+        }
     }//GEN-LAST:event_searchBarActionPerformed
 
     private void changeEToVMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeEToVMouseClicked
@@ -131,6 +149,14 @@ public class MainFrame extends javax.swing.JFrame {
         currentDic = vToE;
         reload();
     }//GEN-LAST:event_changeVToEMouseClicked
+
+    private void changeEToVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeEToVActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeEToVActionPerformed
+
+    private void changeVToEActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_changeVToEActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_changeVToEActionPerformed
     
     private void displayKeys() {
         keysList.setListData(currentDic.getKeys().toArray());
@@ -144,9 +170,10 @@ public class MainFrame extends javax.swing.JFrame {
     private void reload() {
         searchBar.setText("");
         resultArea.setText("");
+        searchBar.setRequestFocusEnabled(true);
         hm = currentDic.getData();
         keys = currentDic.getKeys();
-        displayKeys();
+        //displayKeys();
     }
     
     private Dictionary currentDic = null;
@@ -163,4 +190,26 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextPane resultArea;
     private javax.swing.JTextField searchBar;
     // End of variables declaration//GEN-END:variables
+    class CustomKeyListener implements KeyListener{
+      public void keyTyped(KeyEvent e) {
+      }
+        @Override
+        public void keyPressed(java.awt.event.KeyEvent e) {
+            if (e.getKeyCode() == KeyEvent.PRESS) {
+                String word = searchBar.getText();
+                String[] temp = { word };
+                keysList.setListData(temp);
+            }
+        }
+
+        @Override
+        public void keyTyped(java.awt.event.KeyEvent e) {
+          
+        }
+
+        @Override
+        public void keyReleased(java.awt.event.KeyEvent e) {
+            
+        }
+    }
 }
