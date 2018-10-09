@@ -5,6 +5,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import javax.swing.DefaultListModel;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -112,6 +114,34 @@ public class MainFrame extends javax.swing.JFrame {
         reload();
     }//GEN-LAST:event_changeVToEMouseClicked
     
+    private DefaultListModel<String> getFilterModel(String filter) {
+
+        DefaultListModel<String> filterModel = new DefaultListModel<>();
+        ArrayList<String> _keysList = currentDic.getKeys();
+
+        if (filter.isEmpty()) {
+            _keysList.forEach((s) -> {
+                filterModel.addElement(s);
+            });
+            return filterModel;
+        }
+
+        int matchedIndex = currentDic.binarySearch(_keysList, filter);
+
+        if (matchedIndex != -1) {
+            String matchedKey = _keysList.get(matchedIndex);
+
+            while (matchedKey.startsWith(filter)) {
+                filterModel.addElement(matchedKey);
+                if (++matchedIndex >= _keysList.size()) {
+                    break;
+                }
+                matchedKey = _keysList.get(matchedIndex);
+            }
+        }
+        return filterModel;
+    }
+    
     private void displayKeys() {
         keysList.setListData(currentDic.getKeys().toArray());
     }
@@ -135,7 +165,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     private class SearchBarListener implements KeyListener {
-        
+            
         @Override
         public void keyPressed(KeyEvent e) {    
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
@@ -153,8 +183,7 @@ public class MainFrame extends javax.swing.JFrame {
         public void keyReleased(KeyEvent e) {
             if (e.getKeyCode() != KeyEvent.VK_ENTER) {
                 String word = searchBar.getText();
-                String[] temp = {word, ""};
-                keysList.setListData(temp);
+                keysList.setListData(getFilterModel(word).toArray());
             }
         }
 
