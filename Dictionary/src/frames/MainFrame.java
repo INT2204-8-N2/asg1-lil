@@ -114,32 +114,30 @@ public class MainFrame extends javax.swing.JFrame {
         reload();
     }//GEN-LAST:event_changeVToEMouseClicked
     
-    private DefaultListModel<String> getFilterModel(String filter) {
+    private DefaultListModel<String> displayKeysListModel(String word) {
 
-        DefaultListModel<String> filterModel = new DefaultListModel<>();
+        DefaultListModel<String> keyModel = new DefaultListModel<>();
         ArrayList<String> _keysList = currentDic.getKeys();
 
-        if (filter.isEmpty()) {
-            _keysList.forEach((s) -> {
-                filterModel.addElement(s);
-            });
-            return filterModel;
+        if (keyModel.isEmpty()) {
+            displayKeys();
         }
 
-        int matchedIndex = currentDic.binarySearch(_keysList, filter);
+        int index = currentDic.binarySearch(_keysList, word);
 
-        if (matchedIndex != -1) {
-            String matchedKey = _keysList.get(matchedIndex);
+        if (index != -1) {
+            String temp = _keysList.get(index);
 
-            while (matchedKey.startsWith(filter)) {
-                filterModel.addElement(matchedKey);
-                if (++matchedIndex >= _keysList.size()) {
+            while (temp.startsWith(word)) {
+                keyModel.addElement(temp);
+                if (index >= _keysList.size()) {
                     break;
                 }
-                matchedKey = _keysList.get(matchedIndex);
+                index++;
+                temp = _keysList.get(index);
             }
         }
-        return filterModel;
+        return keyModel;
     }
     
     private void displayKeys() {
@@ -171,6 +169,7 @@ public class MainFrame extends javax.swing.JFrame {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 String word = searchBar.getText();
                 displayWordDefinition(word);
+                keysList.setSelectedIndex(0);
             }  
         }
 
@@ -183,7 +182,7 @@ public class MainFrame extends javax.swing.JFrame {
         public void keyReleased(KeyEvent e) {
             if (e.getKeyCode() != KeyEvent.VK_ENTER) {
                 String word = searchBar.getText();
-                keysList.setListData(getFilterModel(word).toArray());
+                keysList.setListData(displayKeysListModel(word).toArray());
             }
         }
 
