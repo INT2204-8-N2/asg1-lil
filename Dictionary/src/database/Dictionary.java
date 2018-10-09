@@ -83,8 +83,8 @@ public class Dictionary {
             else
                 r = m - 1; 
         }
-    return 0;
-}     
+        return -1;
+    }     
     public void modifyWord(String word, String newWord, String newDef) {
         if (newWord == null){
             data.replace(word, newDef);

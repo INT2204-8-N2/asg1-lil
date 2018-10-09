@@ -1,8 +1,6 @@
 package frames;
 
-import com.sun.glass.events.KeyEvent;
 import database.Dictionary;
-import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -13,7 +11,6 @@ public class MainFrame extends javax.swing.JFrame {
         currentDic = new Dictionary();
         eToV = new Dictionary("data/E_V.txt");
         vToE = new Dictionary("data/V_E.txt");
-        searchBar.addKeyListener(new CustomKeyListener());
         reload();
     }
 
@@ -130,12 +127,16 @@ public class MainFrame extends javax.swing.JFrame {
 
     private void searchBarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchBarActionPerformed
         String word = searchBar.getText().trim();
-        if (currentDic.binarySearch(keys, word) != 0) {
+        if (currentDic.binarySearch(keys, word) != -1) {
             displayWordDefinition(word);
         }
         else { 
-            displayWordDefinition("Nout found");
+            resultArea.setText("Not found");
         }
+        
+        int index1 = keys.indexOf(word);
+        int index2 = keys.lastIndexOf(word);
+        System.out.println(index1);
     }//GEN-LAST:event_searchBarActionPerformed
 
     private void changeEToVMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeEToVMouseClicked
@@ -190,26 +191,4 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextPane resultArea;
     private javax.swing.JTextField searchBar;
     // End of variables declaration//GEN-END:variables
-    class CustomKeyListener implements KeyListener{
-      public void keyTyped(KeyEvent e) {
-      }
-        @Override
-        public void keyPressed(java.awt.event.KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.PRESS) {
-                String word = searchBar.getText();
-                String[] temp = { word };
-                keysList.setListData(temp);
-            }
-        }
-
-        @Override
-        public void keyTyped(java.awt.event.KeyEvent e) {
-          
-        }
-
-        @Override
-        public void keyReleased(java.awt.event.KeyEvent e) {
-            
-        }
-    }
 }
