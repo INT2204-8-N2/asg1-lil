@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Dictionary {
@@ -62,6 +63,7 @@ public class Dictionary {
                     data.put(word, def);
                 }
             }
+            Collections.sort(keys);
             in.close();
         } catch (FileNotFoundException ex) {
             ex.printStackTrace();

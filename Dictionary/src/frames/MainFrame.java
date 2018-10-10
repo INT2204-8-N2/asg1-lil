@@ -26,11 +26,11 @@ public class MainFrame extends javax.swing.JFrame {
         searchBar = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         definition = new javax.swing.JTextPane();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        keysList = new javax.swing.JList();
         changeEToV = new javax.swing.JButton();
         changeVToE = new javax.swing.JButton();
         speaker = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        keysList = new javax.swing.JList();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -38,15 +38,6 @@ public class MainFrame extends javax.swing.JFrame {
         definition.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(definition);
         definition.setContentType("text/html");
-
-        keysList.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = {};
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
-        keysList.setToolTipText("");
-        keysList.setName(""); // NOI18N
-        jScrollPane2.setViewportView(keysList);
 
         changeEToV.setText("E_V");
         changeEToV.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -69,6 +60,15 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        keysList.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = {};
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        keysList.setToolTipText("");
+        keysList.setName(""); // NOI18N
+        jScrollPane3.setViewportView(keysList);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -81,9 +81,11 @@ public class MainFrame extends javax.swing.JFrame {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(speaker))
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                        .addGap(22, 22, 22)
+                                .addComponent(speaker)
+                                .addGap(22, 22, 22))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(changeEToV, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -105,11 +107,9 @@ public class MainFrame extends javax.swing.JFrame {
                             .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(speaker))
                         .addGap(18, 18, 18)
-                        .addComponent(jScrollPane2))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jScrollPane3))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -168,11 +168,15 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     private void displayWordDefinition(String key) {
-        if (currentDic.binarySearch(currentDic.getKeys(), key) != 0) {
+        if (currentDic.binarySearch(currentDic.getKeys(), key) != -1) {
             String meaning = currentDic.getData().get(key);
             definition.setText(meaning);
         } else {
-            definition.setText("Not found");
+            if (currentDic == eToV) {
+                new APISearchFrame("en", "vi", searchBar.getText()).setVisible(true);
+            } else {
+                new APISearchFrame("vi", "en", searchBar.getText()).setVisible(true);
+            }
         }
     }
     
@@ -198,7 +202,6 @@ public class MainFrame extends javax.swing.JFrame {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                 String word = searchBar.getText();
                 displayWordDefinition(word);
-                keysList.setSelectedIndex(0);
             }  
             if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
                 definition.setText("");
@@ -215,9 +218,9 @@ public class MainFrame extends javax.swing.JFrame {
             if (e.getKeyCode() != KeyEvent.VK_ENTER) {
                 String word = searchBar.getText();
                 keysList.setListData(displayKeysListModel(word).toArray());
-            }
-            if (searchBar.getText().isEmpty()) {
+                if (searchBar.getText().isEmpty()) {
                 displayKeys();
+                }
             }
         }
 
@@ -281,6 +284,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextPane definition;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList keysList;
     private javax.swing.JTextField searchBar;
     private javax.swing.JButton speaker;
