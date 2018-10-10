@@ -7,14 +7,15 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import com.sun.speech.freetts.*;
 
 public class MainFrame extends javax.swing.JFrame {
 
     public MainFrame() {
         initComponents();
-        currentDic = new Dictionary();
         eToV = new Dictionary("data/E_V.txt");
         vToE = new Dictionary("data/V_E.txt");
+        currentDic = eToV;
         reload();
     }
 
@@ -29,6 +30,7 @@ public class MainFrame extends javax.swing.JFrame {
         keysList = new javax.swing.JList();
         changeEToV = new javax.swing.JButton();
         changeVToE = new javax.swing.JButton();
+        speaker = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -60,37 +62,48 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        speaker.setText("Speak");
+        speaker.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                speakerActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(20, 20, 20)
-                        .addComponent(changeEToV, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(searchBar, javax.swing.GroupLayout.DEFAULT_SIZE, 149, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(changeVToE, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(speaker))
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGap(22, 22, 22)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 298, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 322, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(changeEToV, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(changeVToE, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(changeEToV, javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(changeEToV)
                     .addComponent(changeVToE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(speaker))
                         .addGap(18, 18, 18)
                         .addComponent(jScrollPane2))
                     .addGroup(layout.createSequentialGroup()
@@ -113,6 +126,16 @@ public class MainFrame extends javax.swing.JFrame {
         currentDic = vToE;
         reload();
     }//GEN-LAST:event_changeVToEMouseClicked
+
+    private void speakerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speakerActionPerformed
+        if (currentDic == eToV) {
+            Voice voice;
+            VoiceManager vm = VoiceManager.getInstance();
+            voice = vm.getVoice(VOICENAME);
+            voice.allocate();
+            voice.speak(searchBar.getText());
+        }
+    }//GEN-LAST:event_speakerActionPerformed
     
     private DefaultListModel<String> displayKeysListModel(String word) {
 
@@ -145,8 +168,12 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     private void displayWordDefinition(String key) {
-        String meaning = currentDic.getData().get(key);
-        definition.setText(meaning);
+        if (currentDic.binarySearch(currentDic.getKeys(), key) != 0) {
+            String meaning = currentDic.getData().get(key);
+            definition.setText(meaning);
+        } else {
+            definition.setText("Not found");
+        }
     }
     
     private void loadListener() {
@@ -173,8 +200,8 @@ public class MainFrame extends javax.swing.JFrame {
                 displayWordDefinition(word);
                 keysList.setSelectedIndex(0);
             }  
-            else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                keysList.setSelectedIndex(0);
+            if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
+                definition.setText("");
             }
         }
 
@@ -188,6 +215,9 @@ public class MainFrame extends javax.swing.JFrame {
             if (e.getKeyCode() != KeyEvent.VK_ENTER) {
                 String word = searchBar.getText();
                 keysList.setListData(displayKeysListModel(word).toArray());
+            }
+            if (searchBar.getText().isEmpty()) {
+                displayKeys();
             }
         }
 
@@ -244,6 +274,7 @@ public class MainFrame extends javax.swing.JFrame {
     private Dictionary currentDic = null;
     private Dictionary eToV = null;
     private Dictionary vToE = null;
+    private static final String VOICENAME = "kevin16";
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton changeEToV;
     private javax.swing.JButton changeVToE;
@@ -252,5 +283,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList keysList;
     private javax.swing.JTextField searchBar;
+    private javax.swing.JButton speaker;
     // End of variables declaration//GEN-END:variables
 }
