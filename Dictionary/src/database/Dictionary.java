@@ -79,17 +79,14 @@ public class Dictionary {
     }    
     
     public int binarySearch(ArrayList<String> keys, String str) { 
-        int l = 0, r = keys.size() - 1; 
-        while (l <= r) { 
-            int m = l + (r-l)/2; 
-            if (keys.get(m).equals(str)) 
-                return m; 
-            if (keys.get(m).compareTo(str) < 0) 
-                l = m + 1; 
-            else
-                r = m - 1; 
+        if (keys.get(0).compareTo(str)>=0) return 0;
+        int l = 0, r = keys.size();
+        while (l < r - 1){
+            int m = (l + r) / 2;
+            if (keys.get(m).compareTo(str) < 0) l = m;
+            else r = m;
         }
-        return -1;
+        return r;
     }  
     
     public void modifyWord(String word, String newWord, String newDef) {

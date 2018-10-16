@@ -175,8 +175,7 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_speechRecognizerMouseClicked
 
     private void addWordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addWordMouseClicked
-        currentDic.addWord("ADDD", "B");
-        System.out.println("ADDD");
+        System.out.println(currentDic.binarySearch(currentDic.getKeys(), "ADDD"));
         reload();
     }//GEN-LAST:event_addWordMouseClicked
 
