@@ -73,7 +73,6 @@ public class Dictionary {
     }  
     
     public void addWord(String word, String def){
-        word = word.toLowerCase();
         data.put(word, def);
         int n = binarySearch(keys, word);
         keys.add(n, word);
@@ -109,7 +108,7 @@ public class Dictionary {
     
     public void removeWord(String word) {
         int n = keys.lastIndexOf(word);
-        if (n>=0 && n<=keys.size()-1){
+        if (n>=0 && n<=keys.size() - 1) {
             keys.remove(n);
             data.remove(word);
         }

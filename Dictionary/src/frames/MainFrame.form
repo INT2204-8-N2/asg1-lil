@@ -39,6 +39,10 @@
                       <Component id="speaker" min="-2" pref="75" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="speechRecognizer" min="-2" pref="75" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="addWord" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="removeWord" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jScrollPane2" min="-2" pref="194" max="-2" attributes="0"/>
@@ -64,6 +68,8 @@
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="speaker" alignment="3" max="32767" attributes="0"/>
                       <Component id="speechRecognizer" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="addWord" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="removeWord" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>
@@ -152,6 +158,22 @@
       </Properties>
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="speechRecognizerMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="addWord">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Add"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="addWordMouseClicked"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="removeWord">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Remove"/>
+      </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="removeWordMouseClicked"/>
       </Events>
     </Component>
   </SubComponents>
