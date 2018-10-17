@@ -184,6 +184,20 @@ public class MainFrame extends javax.swing.JFrame {
         reload();
     }//GEN-LAST:event_removeWordMouseClicked
     
+    private int binarySearch(ArrayList<String> keys, String str) {
+        int l = 0, r = keys.size() - 1; 
+        while (l <= r) { 
+            int m = l + (r-l)/2; 
+            if (keys.get(m).equals(str)) 
+                return m; 
+            if (keys.get(m).compareTo(str) < 0) 
+                l = m + 1; 
+            else
+                r = m - 1; 
+        }
+        return -1;
+    }
+    
     private DefaultListModel<String> displayKeysListModel(String word) {
 
         DefaultListModel<String> keyModel = new DefaultListModel<>();
@@ -193,7 +207,7 @@ public class MainFrame extends javax.swing.JFrame {
             displayKeys();
         }
 
-        int index = currentDic.binarySearch(_keysList, word);
+        int index = binarySearch(_keysList, word);
 
         if (index != -1) {
             String temp = _keysList.get(index);
@@ -206,7 +220,7 @@ public class MainFrame extends javax.swing.JFrame {
                 index++;
                 temp = _keysList.get(index);
             }
-        }
+        } 
         return keyModel;
     }
     
@@ -215,7 +229,7 @@ public class MainFrame extends javax.swing.JFrame {
     }
     
     private void displayWordDefinition(String key) {
-        if (currentDic.binarySearch(currentDic.getKeys(), key) != -1) {
+        if (binarySearch(currentDic.getKeys(), key) != -1) {
             String meaning = currentDic.getData().get(key);
             definition.setText(meaning);
         } else {
@@ -263,9 +277,10 @@ public class MainFrame extends javax.swing.JFrame {
         public void keyReleased(KeyEvent e) {
             if (e.getKeyCode() != KeyEvent.VK_ENTER) {
                 String word = searchBar.getText();
-                keysList.setListData(displayKeysListModel(word).toArray());
                 if (searchBar.getText().isEmpty()) {
                 displayKeys();
+                } else {
+                    keysList.setListData(displayKeysListModel(word).toArray());
                 }
             }
         }
