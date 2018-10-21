@@ -9,7 +9,6 @@ import java.net.URLEncoder;
 
 public class TranslatorAPI {
     public static String translate(String langFrom, String langTo, String text) throws IOException {
-        // INSERT YOU URL HERE
         String urlStr = "https://script.google.com/macros/s/AKfycbxSD7HHSbzKwhrRsUio_awlS9t6-OQ7QjTjmV507SFu4OfH9nI/exec" +
                 "?q=" + URLEncoder.encode(text, "UTF-8") +
                 "&target=" + langTo +

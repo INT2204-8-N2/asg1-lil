@@ -1,8 +1,10 @@
 package database;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -111,5 +113,23 @@ public class Dictionary {
         }
     }
     
-    public void update() {};
+    public void update(String path) {
+        try {
+            BufferedWriter writer = new BufferedWriter(new FileWriter(path));
+            
+            for (String key : keys) {
+                writer.write(key);
+                String def = data.get(key);
+                if (def != null) {
+                    writer.write(data.get(key));
+                }
+
+                writer.newLine();
+            }
+
+            writer.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 }

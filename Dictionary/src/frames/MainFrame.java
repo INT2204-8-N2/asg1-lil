@@ -16,6 +16,7 @@ public class MainFrame extends javax.swing.JFrame {
         eToV = new Dictionary("data/E_V.txt");
         vToE = new Dictionary("data/V_E.txt");
         currentDic = eToV;
+        //speech = new SpeechFrame();
         reload();
     }
 
@@ -34,8 +35,16 @@ public class MainFrame extends javax.swing.JFrame {
         speechRecognizer = new javax.swing.JButton();
         addWord = new javax.swing.JButton();
         removeWord = new javax.swing.JButton();
+        modify = new javax.swing.JButton();
+        save = new javax.swing.JButton();
+        update = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         definition.setEditable(false);
         definition.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -94,12 +103,33 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        modify.setText("Modify");
+        modify.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                modifyMouseClicked(evt);
+            }
+        });
+
+        save.setText("Save");
+        save.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                saveMouseClicked(evt);
+            }
+        });
+
+        update.setText("Update");
+        update.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                updateMouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(31, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(changeEToV, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(changeVToE, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -116,12 +146,18 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addWord)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(removeWord))
+                        .addComponent(removeWord)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(modify)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(save)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(update))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -137,13 +173,18 @@ public class MainFrame extends javax.swing.JFrame {
                         .addComponent(speaker, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(speechRecognizer)
                         .addComponent(addWord)
-                        .addComponent(removeWord)))
+                        .addComponent(removeWord)
+                        .addComponent(modify)
+                        .addComponent(save)
+                        .addComponent(update)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
+
+        save.setVisible(false);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -171,11 +212,11 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_speakerActionPerformed
 
     private void speechRecognizerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_speechRecognizerMouseClicked
-        new SpeechFrame().setVisible(true);
+        speech.setVisible(true);
     }//GEN-LAST:event_speechRecognizerMouseClicked
 
     private void addWordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addWordMouseClicked
-        System.out.println(currentDic.binarySearch(currentDic.getKeys(), "ADDD"));
+        new AddWordFrame(currentDic).setVisible(true);
         reload();
     }//GEN-LAST:event_addWordMouseClicked
 
@@ -183,6 +224,33 @@ public class MainFrame extends javax.swing.JFrame {
         currentDic.removeWord(keysList.getSelectedValue().toString());
         reload();
     }//GEN-LAST:event_removeWordMouseClicked
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        voce.SpeechInterface.destroy();
+    }//GEN-LAST:event_formWindowClosed
+
+    private void modifyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modifyMouseClicked
+        modify.setVisible(false);
+        definition.setEditable(true);
+        save.setVisible(true);
+    }//GEN-LAST:event_modifyMouseClicked
+
+    private void saveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveMouseClicked
+        save.setVisible(false);
+        modify.setVisible(true);
+        String _word = searchBar.getText().trim();
+        String _definition = definition.getText().trim();
+        if (!"".equals(_word) && !"".equals(_definition)) {
+            currentDic.getData().replace(_word, _definition);
+        }
+        definition.setEditable(false);
+    }//GEN-LAST:event_saveMouseClicked
+
+    private void updateMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_updateMouseClicked
+        eToV.update("data/E_V.txt");
+        vToE.update("data/V_E.txt");
+        reload();
+    }//GEN-LAST:event_updateMouseClicked
     
     private int binarySearch(ArrayList<String> keys, String str) {
         int l = 0, r = keys.size() - 1; 
@@ -335,9 +403,14 @@ public class MainFrame extends javax.swing.JFrame {
         
     }
     
+    public Dictionary getCurrentDic() {
+        return currentDic;
+    }
+    
     private Dictionary currentDic = null;
     private Dictionary eToV = null;
     private Dictionary vToE = null;
+    private SpeechFrame speech = null;
     private static final String VOICENAME = "kevin16";
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addWord;
@@ -347,9 +420,12 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList keysList;
+    private javax.swing.JButton modify;
     private javax.swing.JButton removeWord;
+    private javax.swing.JButton save;
     private javax.swing.JTextField searchBar;
     private javax.swing.JButton speaker;
     private javax.swing.JButton speechRecognizer;
+    private javax.swing.JButton update;
     // End of variables declaration//GEN-END:variables
 }
