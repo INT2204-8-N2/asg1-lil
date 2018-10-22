@@ -67,8 +67,8 @@ public class AddWordFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveButtonMouseClicked
-        String _word = word.getText();
-        String temp = definition.getText();
+        String _word = word.getText().trim();
+        String temp = definition.getText().trim();
         String _definition = "<html><i>" + _word +
                 "</i><br/><ul><li><font color='#cc0000'><b>" + temp + 
                 "</b></font></li></ul></html>";

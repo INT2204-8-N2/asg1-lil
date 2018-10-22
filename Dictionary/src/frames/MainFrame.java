@@ -16,7 +16,7 @@ public class MainFrame extends javax.swing.JFrame {
         eToV = new Dictionary("data/E_V.txt");
         vToE = new Dictionary("data/V_E.txt");
         currentDic = eToV;
-        //speech = new SpeechFrame();
+        speech = new SpeechFrame();
         reload();
     }
 
@@ -32,17 +32,25 @@ public class MainFrame extends javax.swing.JFrame {
         changeEToV = new javax.swing.JButton();
         changeVToE = new javax.swing.JButton();
         speaker = new javax.swing.JButton();
-        speechRecognizer = new javax.swing.JButton();
         addWord = new javax.swing.JButton();
         removeWord = new javax.swing.JButton();
         modify = new javax.swing.JButton();
         save = new javax.swing.JButton();
         update = new javax.swing.JButton();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        fileMenu = new javax.swing.JMenu();
+        speechItem = new javax.swing.JMenuItem();
+        updateItem = new javax.swing.JMenuItem();
+        exitItem = new javax.swing.JMenuItem();
+        editMenu = new javax.swing.JMenu();
+        addItem = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Dreammy Dictionary");
+        setIconImages(null);
         addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowClosed(java.awt.event.WindowEvent evt) {
-                formWindowClosed(evt);
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
             }
         });
 
@@ -61,14 +69,14 @@ public class MainFrame extends javax.swing.JFrame {
         keysList.setAutoscrolls(true);
         jScrollPane2.setViewportView(keysList);
 
-        changeEToV.setText("E_V");
+        changeEToV.setText("English - Vietnamese");
         changeEToV.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 changeEToVMouseClicked(evt);
             }
         });
 
-        changeVToE.setText("V_E");
+        changeVToE.setText("Vietnamese - English");
         changeVToE.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 changeVToEMouseClicked(evt);
@@ -79,13 +87,6 @@ public class MainFrame extends javax.swing.JFrame {
         speaker.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 speakerActionPerformed(evt);
-            }
-        });
-
-        speechRecognizer.setText("Speech");
-        speechRecognizer.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                speechRecognizerMouseClicked(evt);
             }
         });
 
@@ -124,40 +125,81 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        fileMenu.setText("File");
+
+        speechItem.setText("Speech");
+        speechItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                speechItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(speechItem);
+
+        updateItem.setText("Update");
+        updateItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(updateItem);
+
+        exitItem.setText("Exit");
+        exitItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exitItemActionPerformed(evt);
+            }
+        });
+        fileMenu.add(exitItem);
+
+        jMenuBar1.add(fileMenu);
+
+        editMenu.setText("Edit");
+
+        addItem.setText("Add word");
+        addItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addItemActionPerformed(evt);
+            }
+        });
+        editMenu.add(addItem);
+
+        jMenuBar1.add(editMenu);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(changeEToV, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(changeVToE, javax.swing.GroupLayout.PREFERRED_SIZE, 280, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(52, 52, 52))
             .addGroup(layout.createSequentialGroup()
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(searchBar, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(speaker, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(speechRecognizer, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addWord)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(removeWord)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(modify)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(save)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(update))
+                        .addComponent(speaker, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(32, 32, 32)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(16, Short.MAX_VALUE))
+                        .addComponent(update)
+                        .addContainerGap(14, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(modify, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(save, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(addWord)
+                            .addComponent(removeWord))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(changeEToV, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(changeVToE, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(65, 65, 65))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -168,19 +210,26 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(changeVToE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(searchBar)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(speaker, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(speechRecognizer)
-                        .addComponent(addWord)
-                        .addComponent(removeWord)
-                        .addComponent(modify)
-                        .addComponent(save)
-                        .addComponent(update)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(searchBar)
+                                .addComponent(speaker))
+                            .addComponent(modify))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(addWord)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(removeWord)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(save)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(update))))
+                    .addComponent(jScrollPane1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -211,10 +260,6 @@ public class MainFrame extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_speakerActionPerformed
 
-    private void speechRecognizerMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_speechRecognizerMouseClicked
-        speech.setVisible(true);
-    }//GEN-LAST:event_speechRecognizerMouseClicked
-
     private void addWordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_addWordMouseClicked
         new AddWordFrame(currentDic).setVisible(true);
         reload();
@@ -225,23 +270,30 @@ public class MainFrame extends javax.swing.JFrame {
         reload();
     }//GEN-LAST:event_removeWordMouseClicked
 
-    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        voce.SpeechInterface.destroy();
-    }//GEN-LAST:event_formWindowClosed
-
     private void modifyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_modifyMouseClicked
-        modify.setVisible(false);
-        definition.setEditable(true);
-        save.setVisible(true);
+        if (!"".equals(searchBar.getText().trim())) {
+            modify.setVisible(false);
+            definition.setEditable(true);
+            removeWord.setVisible(false);
+            addWord.setVisible(false);
+            update.setVisible(false);
+            save.setVisible(true);
+        }
     }//GEN-LAST:event_modifyMouseClicked
 
     private void saveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_saveMouseClicked
         save.setVisible(false);
         modify.setVisible(true);
+        update.setVisible(true);
+        addWord.setVisible(true);
+        removeWord.setVisible(true);
         String _word = searchBar.getText().trim();
         String _definition = definition.getText().trim();
+        _definition.replaceAll("\\n", "");
+        currentDic.getData().remove(_word);
         if (!"".equals(_word) && !"".equals(_definition)) {
-            currentDic.getData().replace(_word, _definition);
+            currentDic.getData().put(_word, _definition);
+            System.out.println(_definition);
         }
         definition.setEditable(false);
     }//GEN-LAST:event_saveMouseClicked
@@ -251,6 +303,34 @@ public class MainFrame extends javax.swing.JFrame {
         vToE.update("data/V_E.txt");
         reload();
     }//GEN-LAST:event_updateMouseClicked
+
+    private void speechItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_speechItemActionPerformed
+        speech.setVisible(true);
+    }//GEN-LAST:event_speechItemActionPerformed
+
+    private void exitItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitItemActionPerformed
+        dispose();        
+        this.setVisible(false);
+        voce.SpeechInterface.destroy();
+        System.exit(0);
+    }//GEN-LAST:event_exitItemActionPerformed
+
+    private void addItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addItemActionPerformed
+        new AddWordFrame(currentDic).setVisible(true);
+        reload();
+    }//GEN-LAST:event_addItemActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        dispose();
+        voce.SpeechInterface.destroy();
+        System.exit(0);
+    }//GEN-LAST:event_formWindowClosing
+
+    private void updateItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateItemActionPerformed
+        eToV.update("data/E_V.txt");
+        vToE.update("data/V_E.txt");
+        reload();
+    }//GEN-LAST:event_updateItemActionPerformed
     
     private int binarySearch(ArrayList<String> keys, String str) {
         int l = 0, r = keys.size() - 1; 
@@ -288,7 +368,11 @@ public class MainFrame extends javax.swing.JFrame {
                 index++;
                 temp = _keysList.get(index);
             }
-        } 
+        }
+        else {
+            String temp = "<Translate online>";
+            keyModel.addElement(temp);
+        }
         return keyModel;
     }
     
@@ -302,9 +386,9 @@ public class MainFrame extends javax.swing.JFrame {
             definition.setText(meaning);
         } else {
             if (currentDic == eToV) {
-                new APISearchFrame("en", "vi", searchBar.getText()).setVisible(true);
+                new APISearchFrame("en", "vi", searchBar.getText().trim()).setVisible(true);
             } else {
-                new APISearchFrame("vi", "en", searchBar.getText()).setVisible(true);
+                new APISearchFrame("vi", "en", searchBar.getText().trim()).setVisible(true);
             }
         }
     }
@@ -328,7 +412,7 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         public void keyPressed(KeyEvent e) {    
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                String word = searchBar.getText();
+                String word = searchBar.getText().trim();
                 displayWordDefinition(word);
             }  
             if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
@@ -344,8 +428,8 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         public void keyReleased(KeyEvent e) {
             if (e.getKeyCode() != KeyEvent.VK_ENTER) {
-                String word = searchBar.getText();
-                if (searchBar.getText().isEmpty()) {
+                String word = searchBar.getText().trim();
+                if (searchBar.getText().trim().isEmpty()) {
                 displayKeys();
                 } else {
                     keysList.setListData(displayKeysListModel(word).toArray());
@@ -392,7 +476,7 @@ public class MainFrame extends javax.swing.JFrame {
         @Override
         public void keyPressed(KeyEvent e) {
             if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-                displayWordDefinition(searchBar.getText());
+                displayWordDefinition(searchBar.getText().trim());
             }
         }
 
@@ -413,10 +497,15 @@ public class MainFrame extends javax.swing.JFrame {
     private SpeechFrame speech = null;
     private static final String VOICENAME = "kevin16";
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem addItem;
     private javax.swing.JButton addWord;
     private javax.swing.JButton changeEToV;
     private javax.swing.JButton changeVToE;
     private javax.swing.JTextPane definition;
+    private javax.swing.JMenu editMenu;
+    private javax.swing.JMenuItem exitItem;
+    private javax.swing.JMenu fileMenu;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JList keysList;
@@ -425,7 +514,8 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton save;
     private javax.swing.JTextField searchBar;
     private javax.swing.JButton speaker;
-    private javax.swing.JButton speechRecognizer;
+    private javax.swing.JMenuItem speechItem;
     private javax.swing.JButton update;
+    private javax.swing.JMenuItem updateItem;
     // End of variables declaration//GEN-END:variables
 }
