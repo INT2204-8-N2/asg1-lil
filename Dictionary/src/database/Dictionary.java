@@ -2,10 +2,14 @@ package database;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -44,7 +48,8 @@ public class Dictionary {
     }
     
     private void readData(String path) {
-        try (BufferedReader in = new BufferedReader(new FileReader(path))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(
+                      new FileInputStream(path), "UTF-8"))) {
             String line, word, def;
             while ((line = in.readLine()) != null) {
                 
@@ -115,19 +120,18 @@ public class Dictionary {
     
     public void update(String path) {
         try {
-            BufferedWriter writer = new BufferedWriter(new FileWriter(path));
-            
-            for (String key : keys) {
-                writer.write(key);
-                String def = data.get(key);
-                if (def != null) {
-                    writer.write(data.get(key));
+            try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(path), "UTF-8"))) {
+                for (String key : keys) {
+                    writer.write(key);
+                    String def = data.get(key);
+                    if (def != null) {
+                        writer.write(data.get(key));
+                    }
+                    
+                    writer.newLine();
                 }
-
-                writer.newLine();
             }
-
-            writer.close();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
