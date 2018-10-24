@@ -1,5 +1,6 @@
 package frames;
 
+import API.TranslatorAPI;
 import database.Dictionary;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -8,6 +9,9 @@ import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
 import com.sun.speech.freetts.*;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class MainFrame extends javax.swing.JFrame {
 
@@ -25,8 +29,6 @@ public class MainFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         searchBar = new javax.swing.JTextField();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        definition = new javax.swing.JTextPane();
         jScrollPane2 = new javax.swing.JScrollPane();
         keysList = new javax.swing.JList();
         changeEToV = new javax.swing.JButton();
@@ -37,6 +39,8 @@ public class MainFrame extends javax.swing.JFrame {
         modify = new javax.swing.JButton();
         save = new javax.swing.JButton();
         update = new javax.swing.JButton();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        definition = new javax.swing.JEditorPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         fileMenu = new javax.swing.JMenu();
         speechItem = new javax.swing.JMenuItem();
@@ -53,11 +57,6 @@ public class MainFrame extends javax.swing.JFrame {
                 formWindowClosing(evt);
             }
         });
-
-        definition.setEditable(false);
-        definition.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        jScrollPane1.setViewportView(definition);
-        definition.setContentType("text/html");
 
         keysList.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = {};
@@ -125,6 +124,10 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        definition.setEditable(false);
+        definition.setContentType("text/html"); // NOI18N
+        jScrollPane3.setViewportView(definition);
+
         fileMenu.setText("File");
 
         speechItem.setText("Speech");
@@ -179,13 +182,13 @@ public class MainFrame extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(speaker, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 376, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 384, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(update)
-                        .addContainerGap(14, Short.MAX_VALUE))
+                        .addContainerGap(20, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -209,14 +212,14 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(changeEToV)
                     .addComponent(changeVToE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                 .addComponent(searchBar)
                                 .addComponent(speaker))
                             .addComponent(modify))
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
@@ -228,9 +231,10 @@ public class MainFrame extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(save)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(update))))
-                    .addComponent(jScrollPane1))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(update)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3))
+                .addContainerGap())
         );
 
         save.setVisible(false);
@@ -289,7 +293,6 @@ public class MainFrame extends javax.swing.JFrame {
         removeWord.setVisible(true);
         String _word = searchBar.getText().trim();
         String _definition = definition.getText().trim();
-        _definition.replaceAll("\\n", "");
         currentDic.getData().remove(_word);
         if (!"".equals(_word) && !"".equals(_definition)) {
             currentDic.getData().put(_word, _definition);
@@ -385,13 +388,27 @@ public class MainFrame extends javax.swing.JFrame {
             String meaning = currentDic.getData().get(key);
             definition.setText(meaning);
         } else {
+            String from = null;
+            String to = null;
             if (currentDic == eToV) {
-                new APISearchFrame("en", "vi", searchBar.getText().trim()).setVisible(true);
-            } else {
-                new APISearchFrame("vi", "en", searchBar.getText().trim()).setVisible(true);
+                from = "en";
+                to = "vi";
+            } else if (currentDic == vToE) {
+                from = "vi";
+                to = "en";
+            }
+            try {
+                String def = TranslatorAPI.translate(from, to, key);
+                String _definition = "<html><i>" + key +
+                "</i><br/><ul><li><font color='#cc0000'><b>" + def + 
+                "</b></font></li></ul><i><b>\nTranslated by GoogleTranslate</i></b></html>";
+                definition.setText(_definition);
+            } catch (IOException ex) {
+                Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
+                
     
     private void loadListener() {
         searchBar.addKeyListener(new SearchBarListener());
@@ -501,13 +518,13 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JButton addWord;
     private javax.swing.JButton changeEToV;
     private javax.swing.JButton changeVToE;
-    private javax.swing.JTextPane definition;
+    private javax.swing.JEditorPane definition;
     private javax.swing.JMenu editMenu;
     private javax.swing.JMenuItem exitItem;
     private javax.swing.JMenu fileMenu;
     private javax.swing.JMenuBar jMenuBar1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList keysList;
     private javax.swing.JButton modify;
     private javax.swing.JButton removeWord;

@@ -16,7 +16,7 @@ public class TranslatorAPI {
         URL url = new URL(urlStr);
         StringBuilder response = new StringBuilder();
         HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()))) {
+        try (BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream(), "UTF-8")) ) {
             String inputLine;
             while ((inputLine = in.readLine()) != null) {
                 response.append(inputLine);
